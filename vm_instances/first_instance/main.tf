@@ -1,11 +1,13 @@
+#create 3 VMs
 resource "google_compute_instance" "default" {
-  name         = var.vm1_name
-  machine_type = var.vm1_machine_type
-  zone         = var.vm1_zone
+  count = "${length(var.name_count)}"
+  name         = "${var.vm_name}-${count.index+1}"
+  machine_type = "${var.environment == "production" ? var.vm_machine_type["prod"] : var.vm_machine_type["dev"]}"
+  zone         = var.vm_zone
 
   boot_disk {
     initialize_params {
-      image = var.vm1_os_image
+      image = var.vm_os_image
     }
   }
 

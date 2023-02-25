@@ -1,5 +1,14 @@
+terraform {
+  required_providers {
+    google = {
+      source = "hashicorp/google"
+      version = "4.51.0"
+    }
+  }
+}
+
 variable "path" {
-  default = "/home/apostolos/Desktop/terraform/credentials"
+  default = "/home/apostolos/Desktop/terraform/vm_instances/credentials"
 }
 
 provider "google" {
