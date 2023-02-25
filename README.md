@@ -1,4 +1,4 @@
-# Terraform in GCP
+# Terraform in Google Cloud Platform
 
 ## Instructions
 
@@ -19,10 +19,10 @@ $ tree
 │   │   └── variable.tf
 │   ├── apply.sh
 │   ├── plan.sh
-│   ├── destroy.sh
+│   └── destroy.sh
 ├── .gitignore
 └── README.md
 
 ```
-> **secrets.json** contain the API key for your relative >project in GCP. API key is a unique alphanumeric string that associates your Google billing account with your project, and with the specific API or SDK.
+> **secrets.json** contain the API key for your relative project in GCP. API key is a unique alphanumeric string that associates your Google billing account with your project, and with the specific API or SDK. Follow the instructions from original tutorial for set up and get API key [_https://developer.hashicorp.com/terraform/tutorials/gcp-get-started/google-cloud-platform-build_](https://developer.hashicorp.com/terraform/tutorials/gcp-get-started/google-cloud-platform-build_)
 
