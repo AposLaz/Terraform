@@ -1,0 +1,1 @@
+variable "project-id" { default = "lively-shelter-294615"}

@@ -20,6 +20,10 @@ resource "google_compute_instance_template" "instance_template" {
     on_host_maintenance = "MIGRATE" #optional
   }
 
+  network_interface {
+    network = "default"
+  }
+
   disk {
     source_image = "ubuntu-os-cloud/ubuntu-2204-jammy-v20230214"
     auto_delete = "true" #If instance deleted you want the disk deleted
@@ -62,10 +66,13 @@ resource "google_compute_health_check" "health"{
 
 resource "google_compute_region_instance_group_manager" "instance_group_manager" {
   name = "instance-group-manager"
-  instance_template = "${google_compute_instance_template.instance_template[0].self_link}"   # next is the instance template so you've got to point it to the template so it knows where to look
+
+  version {
+    instance_template = "${google_compute_instance_template.instance_template[0].self_link}"   # next is the instance template so you've got to point it to the template so it knows where to look
+  }
 
   base_instance_name = "instance-group-manager"
-  region = "europe-west8-a"
+  region = "europe-west8"
 
   #healthcheck and where going to point
   # auto_healing_policies {
@@ -76,14 +83,13 @@ resource "google_compute_region_instance_group_manager" "instance_group_manager"
   # }
 }
 
-
 # Auto Scale Policy <--How many instances
 
 resource "google_compute_region_autoscaler" "autoscaler" {
   count = 1
   name = "autoscaler"
   project = "lively-shelter-294615"
-  region = "europe-west8-a"
+  region = "europe-west8"
   target = "${google_compute_region_instance_group_manager.instance_group_manager.self_link}" #what are you looking for group manager
 
   autoscaling_policy {
