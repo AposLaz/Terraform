@@ -4,8 +4,8 @@
 
 ######################################################################################
 
-# Author        : DevOps Made Easy
-# Email         : devopsmadeeasy@gmail.com
+# Author        : Apostolos Lazids
+# Email         : aplazidis@gmail.com
 # Description   : Terraform plan script
 # Documentation : https://www.terraform.io/docs/commands/plan.html
 
@@ -35,7 +35,33 @@ terraform -chdir="$1" init
 #The Get command is used to download and update modules mentioned in the root module.
 terraform -chdir="$1" get
 
-#The Plan command is used to create an execution plan
-terraform -chdir="$1" plan
+########################################################################
+#       The Plan command is used to create an execution plan           #
+########################################################################
+PLAN=$(terraform -chdir="$1" plan -json)
 
+#write the result of plan in a txt file
+echo $PLAN | grep -o '"@level":"[^"]*' | grep -o '[^"]*$' > plan.txt
+
+INFO="info" #success value
+planTxt=$(<plan.txt)
+
+#Loop for find if the txt file has a value called error
+while read line
+do
+    str=$(echo "${line//[$'\t\r\n ']}")     #remove new line values and 
+    if [ "$str" != "$INFO" ]; then
+        export ERROR="error"
+    fi
+done < "plan.txt"
+
+############################## check if variable is empty. If not do not continue
+if [ ! -z "$ERROR" ]; then 
+echo "**********************************************************************************************
+**********************************************************************************************
+                                    FOUND ERROR
+                                    IN EXECUTION PLAN
+**********************************************************************************************
+**********************************************************************************************"
+fi
 ######################################################################################
