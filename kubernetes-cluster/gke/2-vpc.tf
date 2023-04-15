@@ -25,3 +25,6 @@ resource "google_compute_network" "k8s-main" {
       google_project_service.container
     ]
 }
+
+
+
