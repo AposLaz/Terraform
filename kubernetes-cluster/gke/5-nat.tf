@@ -1,5 +1,7 @@
 /*
-    Now, let's create Cloud NAT. Give it a name and a reference to the Cloud Router. 
+                          Cloud NAT
+                          
+    Give it a name and a reference to the Cloud Router. 
     Then the region europe-west8-a. You can decide to advertise 
     this Cloud NAT to all subnets in that VPC, or you can select 
     specific ones. In this example, I will choose the private subnet only.

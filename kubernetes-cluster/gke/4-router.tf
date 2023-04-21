@@ -1,5 +1,6 @@
 /*
-    Next, we need to create Cloud Router to advertise routes. It will be used with the NAT gateway 
+                        Cloud Router to advertise routes
+    It will be used with the NAT gateway 
     to allow VMs without public IP addresses to access the internet. For example, Kubernetes nodes 
     will be able to pull docker images from the docker hub.
 */
