@@ -19,7 +19,7 @@ resource "google_compute_network" "k8s-main" {
     routing_mode = "REGIONAL"
     mtu = 1460 # Maximum Transmission Unit in bytes
     delete_default_routes_on_create = false
-
+    disable_dependent_services = true
     depends_on = [
       google_project_service.compute,
       google_project_service.container
