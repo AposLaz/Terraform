@@ -1,5 +1,5 @@
 ################################### PROVIDER ##############################
-variable "credentials_gcp" { default = "/home/apostolos/Desktop/terraform/kubernetes-cluster/credentials" }
+variable "credentials_gcp" { default = "/home/apostolos/Desktop/Terraform/kubernetes-cluster/credentials" }
 variable "project-id" { default = "lively-shelter-294615"}
 variable "region" { default = "europe-west8-a"}
 

@@ -5,3 +5,6 @@ variable "region" { default = "europe-west8"}
 
 #VPC k8s-main
 variable "vpc-name" { default = "k8s-main" }
+
+#Helm
+variable "helm-charts" { default = "/home/apostolos/Desktop/Terraform/kubernetes-cluster/gke/helm-charts" }
