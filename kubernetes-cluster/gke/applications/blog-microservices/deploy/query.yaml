@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: query-comments-post-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: query-comments-post
+  template:
+    metadata:
+      name: query-comments-post
+      labels:
+        app: query-comments-post
+    spec:
+      containers:
+      - name: query-comments-post
+        image: alazidis/blog-microservices-query
+        ports:
+          - containerPort: 6000
+        env:
+          - name: QUERY_PORT
+            valueFrom:
+              configMapKeyRef:
+                key: QUERY_PORT
+                name: blog-microservices
+          - name: POST_TOPIC
+            valueFrom:
+              configMapKeyRef:
+                key: POST_TOPIC
+                name: blog-microservices
+          - name: COMMENT_TOPIC
+            valueFrom:
+              configMapKeyRef:
+                key: COMMENT_TOPIC
+                name: blog-microservices
+          - name: KAFKA_BROKERS
+            valueFrom:
+              configMapKeyRef:
+                key: KAFKA_BROKERS
+                name: blog-microservices
+          - name: MONGO_HOST
+            valueFrom:
+              configMapKeyRef:
+                key: MONGO_HOST
+                name: blog-microservices   
+          - name: MONGO_PORT
+            valueFrom:
+              configMapKeyRef:
+                key: MONGO_PORT
+                name: blog-microservices                       
+          - name: MONGO_USERNAME
+            valueFrom:
+              secretKeyRef: 
+                name: secret-db
+                key: MONGO_USERNAME
+          - name: MONGO_PASSWORD
+            valueFrom:
+              secretKeyRef: 
+                name: secret-db
+                key: MONGO_PASSWORD
