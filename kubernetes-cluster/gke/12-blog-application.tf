@@ -13,18 +13,19 @@ data "kubectl_filename_list" "manifests_kafka" {
     pattern = "./applications/blog-microservices/kafka_topics/*.yaml"
 }
 
-resource "kubectl_manifest" "kafka" {
+resource "kubectl_manifest" "kafka_client" {
     count = length(data.kubectl_filename_list.manifests_kafka.matches)
     yaml_body = file(element(data.kubectl_filename_list.manifests_kafka.matches, count.index))
 
     depends_on = [ 
-        helm_release.my-kafka
+        helm_release.my-kafka,
+        kubectl_manifest.env
     ]
 }
 
 # PVC
 data "kubectl_filename_list" "manifests_pvc" {
-    pattern = "./applications/blog-microservices/deploy/*.yaml"
+    pattern = "./applications/blog-microservices/pvc/*.yaml"
 }
 
 resource "kubectl_manifest" "pvc" {
@@ -32,7 +33,35 @@ resource "kubectl_manifest" "pvc" {
     yaml_body = file(element(data.kubectl_filename_list.manifests_pvc.matches, count.index))
 
     depends_on = [ 
-        kubectl_manifest.kafka
+        kubectl_manifest.kafka_client
+    ]
+}
+
+# DATABASE
+data "kubectl_filename_list" "manifests_db" {
+    pattern = "./applications/blog-microservices/database/*.yaml"
+}
+
+resource "kubectl_manifest" "db" {
+    count = length(data.kubectl_filename_list.manifests_db.matches)
+    yaml_body = file(element(data.kubectl_filename_list.manifests_db.matches, count.index))
+
+    depends_on = [ 
+        kubectl_manifest.pvc
+    ]
+}
+
+# SVC 
+data "kubectl_filename_list" "manifests_svc" {
+    pattern = "./applications/blog-microservices/svc/*.yaml"
+}
+
+resource "kubectl_manifest" "svc" {
+    count = length(data.kubectl_filename_list.manifests_svc.matches)
+    yaml_body = file(element(data.kubectl_filename_list.manifests_svc.matches, count.index))
+
+    depends_on = [ 
+        kubectl_manifest.pvc
     ]
 }
 
@@ -46,22 +75,7 @@ resource "kubectl_manifest" "deploy" {
     yaml_body = file(element(data.kubectl_filename_list.manifests_deploy.matches, count.index))
 
     depends_on = [ 
-        kubectl_manifest.pvc
-    ]
-}
-
-
-# SVC 
-data "kubectl_filename_list" "manifests_svc" {
-    pattern = "./applications/blog-microservices/svc/*.yaml"
-}
-
-resource "kubectl_manifest" "svc" {
-    count = length(data.kubectl_filename_list.manifests_svc.matches)
-    yaml_body = file(element(data.kubectl_filename_list.manifests_svc.matches, count.index))
-
-    depends_on = [ 
-        kubectl_manifest.deploy
+        kubectl_manifest.svc
     ]
 }
 
@@ -75,7 +89,7 @@ resource "kubectl_manifest" "ingress" {
     yaml_body = file(element(data.kubectl_filename_list.manifests_ingress.matches, count.index))
 
     depends_on = [ 
-        kubectl_manifest.svc
+        kubectl_manifest.deploy
     ]
 }
 

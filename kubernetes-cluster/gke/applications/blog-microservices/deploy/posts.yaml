@@ -32,7 +32,3 @@ spec:
             configMapKeyRef:
               key: POST_PORT
               name: blog-microservices
-        resources:
-          limits:
-            memory: "128Mi"
-            cpu: "500m"

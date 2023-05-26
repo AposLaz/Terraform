@@ -1,7 +1,11 @@
 resource "null_resource" "connecto_gcloud" {
     provisioner "local-exec" {
-      command = "gcloud"
+      command = "gcloud container clusters get-credentials primary --region europe-west8 --project lively-shelter-294615"
     }
+
+    depends_on = [ 
+        google_container_cluster.primary
+     ]
 }
 
 resource "null_resource" "install_ingress_nginx" {
