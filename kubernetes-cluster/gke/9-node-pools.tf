@@ -14,8 +14,13 @@ resource "google_container_node_pool" "general" {
     auto_upgrade = true
   }
 
+  autoscaling {
+    min_node_count = 3
+    max_node_count = 10
+  }
+
   node_config {
-    preemptible = false
+    preemptible = true
     machine_type = "e2-medium"
   
     labels = {

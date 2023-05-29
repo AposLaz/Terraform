@@ -93,3 +93,14 @@ resource "kubectl_manifest" "ingress" {
     ]
 }
 
+# Wait condition for all Pods to be ready before finishing
+resource "null_resource" "wait_conditions_blog_applicattion" {
+  provisioner "local-exec" {
+    interpreter = ["bash", "-exc"]
+    command     = "kubectl wait --for=condition=ready pods --all -n ${var.namespace} --timeout=-1s 2> /dev/null"
+  }
+
+  depends_on = [
+    kubectl_manifest.ingress
+  ]
+}

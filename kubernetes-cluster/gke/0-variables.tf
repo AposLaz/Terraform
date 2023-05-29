@@ -8,3 +8,17 @@ variable "vpc-name" { default = "k8s-main" }
 
 #Helm
 variable "helm-charts" { default = "/home/apostolos/Desktop/Terraform/kubernetes-cluster/gke/helm-charts" }
+
+#Namespaces
+variable "namespace" {
+  type        = string
+  description = "Kubernetes Namespace in which my application resources are to be deployed"
+  default     = "default"
+}
+
+#Namespaces
+variable "google_eshop_path" {
+  type        = string
+  description = "Google Eshop"
+  default     = "./applications/google-eshop/kubernetes-manifests.yaml"
+}
