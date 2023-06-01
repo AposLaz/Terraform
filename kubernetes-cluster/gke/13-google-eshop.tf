@@ -4,7 +4,10 @@ resource "null_resource" "apply_google_eshop" {
     # interpreter = ["bash", "-exc"]
     command     = "kubectl apply -f ${var.google_eshop_path} -n ${var.namespace}"
   }
-
+  
+  depends_on = [ 
+    null_resource.connecto_gcloud
+   ]
 
 }
 

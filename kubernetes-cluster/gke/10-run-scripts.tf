@@ -1,6 +1,6 @@
 resource "null_resource" "connecto_gcloud" {
     provisioner "local-exec" {
-      command = "gcloud container clusters get-credentials primary --region europe-west8 --project lively-shelter-294615"
+      command = "gcloud container clusters get-credentials primary --region ${var.region} --project ${var.project-id}"
     }
 
     depends_on = [ 
