@@ -32,7 +32,7 @@ spec:
             port: 
               number: 6000
       - pathType: Prefix
-        path: /?(.*)
+        path: /
         backend:
           service:
             name: client-svc

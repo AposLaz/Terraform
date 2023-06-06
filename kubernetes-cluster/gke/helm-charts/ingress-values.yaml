@@ -4,3 +4,20 @@ controller:
     annotations:
       cloud.google.com/neg: '{"exposed_ports": {"80":{"name": "ingress-nginx-controller-neg"}}}'
   replicaCount: 3  
+  
+  resources:
+    limits:
+      cpu: "0.3"
+      memory: 512Mi
+      
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      additionalLabels:
+        release: "prometheus"
+  # https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/monitoring.md
+  podAnnotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "10254"
+    prometheus.io/path: "/metrics"

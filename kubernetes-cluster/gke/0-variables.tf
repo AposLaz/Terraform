@@ -16,6 +16,12 @@ variable "namespace" {
   default     = "default"
 }
 
+variable "istio_namespace" {
+  type = string
+  description = "Kubernetes for istio & monitoring namespace"
+  default = "istio-stystem"
+}
+
 #Namespaces
 variable "google_eshop_path" {
   type        = string
