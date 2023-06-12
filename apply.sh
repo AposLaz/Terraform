@@ -5,7 +5,7 @@
 ######################################################################################
 
 # Author        : DevOps Made Easy
-# Email         : devopsmadeeasy@gmail.com
+# Email         : aplazidis@gmail.com
 # Description   : Terraform apply script
 # Documentation : https://www.terraform.io/docs/commands/apply.html
 
