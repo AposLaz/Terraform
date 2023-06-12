@@ -6,6 +6,10 @@ resource "helm_release" "my-kafka" {
   values = [
     file("${var.helm-charts}/kafka-values.yaml")
   ]
+
+  depends_on = [
+    null_resource.connecto_gcloud
+  ]
 }
 
 

@@ -5,12 +5,12 @@ resource "google_service_account" "kubetf" {
 }
 
 resource "google_container_node_pool" "general" {
-  name = "general"
-  cluster = google_container_cluster.primary.id
+  name       = "general"
+  cluster    = google_container_cluster.primary.id
   node_count = 1
 
   management {
-    auto_repair = true
+    auto_repair  = true
     auto_upgrade = true
   }
 
@@ -20,16 +20,16 @@ resource "google_container_node_pool" "general" {
   }
 
   node_config {
-    preemptible = true
+    preemptible  = true
     machine_type = "e2-medium"
-  
+
     labels = {
       role = "general"
     }
 
     service_account = google_service_account.kubetf.email
-    oauth_scopes = [ 
-        "https://www.googleapis.com/auth/cloud-platform" 
+    oauth_scopes = [
+      "https://www.googleapis.com/auth/cloud-platform"
     ]
   }
 }

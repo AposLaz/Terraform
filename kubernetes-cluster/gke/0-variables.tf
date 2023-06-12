@@ -1,7 +1,7 @@
 ################################### PROVIDER ##############################
 variable "credentials_gcp" { default = "/home/apostolos/Desktop/Terraform/kubernetes-cluster/credentials" }
-variable "project-id" { default = "lively-shelter-294615"}
-variable "region" { default = "europe-west8"}
+variable "project-id" { default = "lively-shelter-294615" }
+variable "region" { default = "europe-west8" }
 
 #VPC k8s-main
 variable "vpc-name" { default = "k8s-main" }
@@ -17,9 +17,9 @@ variable "namespace" {
 }
 
 variable "istio_namespace" {
-  type = string
+  type        = string
   description = "Kubernetes for istio & monitoring namespace"
-  default = "istio-stystem"
+  default     = "istio-system"
 }
 
 #Namespaces
