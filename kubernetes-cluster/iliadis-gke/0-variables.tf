@@ -14,6 +14,12 @@ variable "region" {
   description = "Region for GKE cluster"
 }
 
+variable "zone" {
+  type        = string
+  description = "Zone for GKE cluster"
+}
+
+
 #VPC k8s-main
 variable "vpc-name" {
   type        = string

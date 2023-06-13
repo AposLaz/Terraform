@@ -7,21 +7,19 @@ resource "google_service_account" "kubetf" {
 resource "google_container_node_pool" "general" {
   name       = "general"
   cluster    = google_container_cluster.primary.id
-  node_count = 1
+  node_count = 4
 
   management {
     auto_repair  = true
     auto_upgrade = true
   }
 
-  autoscaling {
-    min_node_count = 3
-    max_node_count = 10
-  }
-
   node_config {
     preemptible  = true
-    machine_type = "e2-medium"
+    machine_type = "e2-standard-2"
+    disk_size_gb = "40"
+    disk_type    = "pd-standard"
+    image_type   = "COS_CONTAINERD"
 
     labels = {
       role = "general"
