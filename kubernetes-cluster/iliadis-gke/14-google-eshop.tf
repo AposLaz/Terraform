@@ -1,15 +1,15 @@
-# # Apply YAML kubernetes-manifest configurations
-# resource "null_resource" "apply_google_eshop" {
-#   provisioner "local-exec" {
-#     # interpreter = ["bash", "-exc"]
-#     command     = "kubectl apply -f ${var.google_eshop_path} -n ${var.namespace}"
-#   }
+# Apply YAML kubernetes-manifest configurations
+resource "null_resource" "apply_google_eshop" {
+  provisioner "local-exec" {
+    # interpreter = ["bash", "-exc"]
+    command = "kubectl apply -f ${var.google_eshop_path} -n ${var.namespace}"
+  }
 
-#   depends_on = [ 
-#     null_resource.connecto_gcloud
-#    ]
+  depends_on = [
+    null_resource.connecto_gcloud
+  ]
 
-# }
+}
 
 # # Wait condition for all Pods to be ready before finishing
 # resource "null_resource" "wait_conditions_google" {

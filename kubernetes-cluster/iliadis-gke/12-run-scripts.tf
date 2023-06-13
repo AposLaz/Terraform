@@ -1,6 +1,6 @@
 resource "null_resource" "connecto_gcloud" {
   provisioner "local-exec" {
-    command = "gcloud container clusters get-credentials primary --region ${var.zone} --project ${var.project-id}"
+    command = "gcloud container clusters get-credentials primary --zone ${var.zone} --project ${var.project-id}"
   }
 
   depends_on = [

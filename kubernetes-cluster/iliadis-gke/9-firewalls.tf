@@ -54,7 +54,7 @@ resource "google_compute_firewall" "allow-istio-ports" {
 
   allow {
     protocol = "tcp"
-    ports    = ["15017", "10250"]
+    ports    = ["15017", "15021", "10250"]
   }
 
   source_ranges = ["0.0.0.0/0"]
