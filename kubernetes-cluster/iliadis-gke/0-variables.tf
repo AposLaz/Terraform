@@ -46,10 +46,10 @@ variable "istio_namespace" {
   default     = "istio-system"
 }
 
-variable "google_eshop_path" {
+variable "application_path" {
   type        = string
-  description = "Google Eshop"
-  default     = "/home/apostolos/Desktop/Terraform/kubernetes-cluster/iliadis-gke/applications/google-eshop/kubernetes-manifests.yaml"
+  description = "Path from application folders"
+  default     = "/home/apostolos/Desktop/Terraform/kubernetes-cluster/iliadis-gke/applications"
 }
 
 variable "google_eshop_ns" {

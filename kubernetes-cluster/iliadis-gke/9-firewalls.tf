@@ -54,7 +54,20 @@ resource "google_compute_firewall" "allow-istio-ports" {
 
   allow {
     protocol = "tcp"
-    ports    = ["15017", "15021", "10250"]
+    ports    = ["15017", "15021", "10250", "9402"]
+  }
+
+  source_ranges = ["0.0.0.0/0"]
+}
+
+resource "google_compute_firewall" "prometheus-ports" {
+  name = "allow-prometheus-ports"
+
+  network = google_compute_network.k8s-main.name
+
+  allow {
+    protocol = "tcp"
+    ports    = ["9090", "8080"]
   }
 
   source_ranges = ["0.0.0.0/0"]
