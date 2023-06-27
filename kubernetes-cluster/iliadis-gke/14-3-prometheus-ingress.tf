@@ -5,6 +5,6 @@ resource "helm_release" "ingress-nginx" {
   namespace        = "ingress-nginx"
   create_namespace = true
   values = [
-    "${file("${helm-charts}/ingress-values.yaml")}"
+    "${file("${var.helm-charts}/ingress-values.yaml")}"
   ]
 }
