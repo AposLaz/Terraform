@@ -7,4 +7,13 @@ resource "helm_release" "ingress-nginx" {
   values = [
     "${file("${var.helm-charts}/ingress-values.yaml")}"
   ]
+
+  wait    = true
+  timeout = 3000
+
+  depends_on = [
+    helm_release.prometheus-helm
+  ]
 }
+
+
