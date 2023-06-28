@@ -3,16 +3,16 @@ auth:
 
 external_services:
   prometheus:
-    url: http://prometheus-kube-prometheus-prometheus.istio-system:9090/prometheus
-    health_check_url: http://prometheus-kube-prometheus-prometheus.istio-system:9090/prometheus/-/healthy
+    url: http://34.159.120.143/prometheus
+    health_check_url: http://34.159.120.143/prometheus/-/healthy
   tracing:
     enabled: true
     in_cluster_url: http://jaeger-simple-query.istio-system:16686/jaeger
     # TODO : change this to nginx ingress controller IP
-    url: http://34.89.195.50/jaeger
+    url: http://34.159.120.143/jaeger
     use_grpc: false
   grafana:
     enabled: true
     in_cluster_url: http://prometheus-grafana.istio-system/grafana
     # TODO : change this to nginx ingress controller IP
-    url: http://34.89.195.50/grafana
+    url: http://34.159.120.143/grafana

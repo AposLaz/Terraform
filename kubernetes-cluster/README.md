@@ -7,13 +7,18 @@ Terraform uses persisted state data to keep track of the resources it manages. M
 
 ```
 
-
 #### Modules
 
 ```
 In modules we create re-use instances.
 ```
 
-#### VPC 
+#### VPC
 
+```
 https://cloud.in28minutes.com/gcp-certification-google-cloud-vpc
+```
+
+### ISTIO
+
+Trace (Jaeger) = Debug a service in a microservice environment. Find which service has the problem in traffic.

@@ -52,6 +52,12 @@ variable "application_path" {
   default     = "/home/apostolos/Desktop/Terraform/kubernetes-cluster/iliadis-gke/applications"
 }
 
+variable "configuration_path" {
+  type        = string
+  description = "Path from application folders"
+  default     = "/home/apostolos/Desktop/Terraform/kubernetes-cluster/iliadis-gke/configuration"
+}
+
 variable "google_eshop_ns" {
   type        = string
   description = "Kubernetes Namespace for google eshop"

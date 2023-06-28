@@ -2,7 +2,7 @@
 
 resource "null_resource" "prometheus-namespace" {
   provisioner "local-exec" {
-    command = "kubectl apply -f /home/apostolos/Desktop/Terraform/kubernetes-cluster/iliadis-gke/configuration/prometheus/prometheus-namespace.yaml"
+    command = "kubectl apply -f ${var.configuration_path}/prometheus/prometheus-namespace.yaml"
   }
 
   depends_on = [

@@ -2,7 +2,6 @@
 #  Create Pod Monitor for Scrape.
 #  This Pod inform prometheus which endpoint & which application to monitor
 #  This Pod monitoring object to gather monitor from each ENVOY proxy
-
 # scrap data every 15 seconds
 
 apiVersion: monitoring.coreos.com/v1
