@@ -72,3 +72,4 @@ resource "google_compute_firewall" "prometheus-ports" {
 
   source_ranges = ["0.0.0.0/0"]
 }
+

@@ -1,6 +1,6 @@
-/**
-    Install Jaeger
-*/
+# /**
+#     Install Jaeger
+# */
 
 resource "helm_release" "jaeger_operator" {
   name             = "jaeger-operator"

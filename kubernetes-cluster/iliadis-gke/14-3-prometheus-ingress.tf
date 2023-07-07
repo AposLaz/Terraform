@@ -15,5 +15,3 @@ resource "helm_release" "ingress-nginx" {
     helm_release.prometheus-helm
   ]
 }
-
-

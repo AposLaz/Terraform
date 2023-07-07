@@ -1,6 +1,6 @@
 controller: 
   service:
-    loadBalancerIP: 34.159.120.143
+    # loadBalancerIP: 34.159.120.143
     internal:
       enabled: true
       annotations:
