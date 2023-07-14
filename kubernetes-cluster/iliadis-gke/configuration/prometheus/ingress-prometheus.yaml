@@ -30,6 +30,13 @@ spec:
             port: 
               number: 80
       - pathType: Prefix
+        path: "/prometheus-node/?(.*)"
+        backend:
+          service:
+            name: prometheus-prometheus-node-exporter
+            port:
+              number: 9100
+      - pathType: Prefix
         path: "/jaeger/?(.*)"
         backend:
           service:

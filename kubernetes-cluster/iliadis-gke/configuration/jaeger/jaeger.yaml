@@ -58,8 +58,10 @@ metadata:
   namespace: istio-system
   labels:
     app: jaeger
+    app.kubernetes.io/name: jaeger
+    app.kubernetes.io/component: query
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   ports:
     - name: http-query
       port: 80
