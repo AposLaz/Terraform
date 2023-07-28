@@ -44,4 +44,68 @@ resource "google_project_service" "cloud-dns" {
   disable_dependent_services = true
 }
 
+#ANTHOS API
+resource "google_project_service" "anthos" {
+  service                    = "anthos.googleapis.com"
+  disable_dependent_services = true
+}
 
+#TRACE
+resource "google_project_service" "cloud-trace" {
+  service                    = "cloudtrace.googleapis.com"
+  disable_dependent_services = true
+}
+
+#Mesh
+resource "google_project_service" "mesh" {
+  service                    = "mesh.googleapis.com"
+  disable_dependent_services = true
+}
+
+#MeshA
+resource "google_project_service" "meshca" {
+  service                    = "meshca.googleapis.com"
+  disable_dependent_services = true
+}
+
+#Telemetry
+resource "google_project_service" "telemetry" {
+  service                    = "meshtelemetry.googleapis.com"
+  disable_dependent_services = true
+}
+
+#Meshconfig
+resource "google_project_service" "meshconfig" {
+  service                    = "meshconfig.googleapis.com"
+  disable_dependent_services = true
+}
+
+#iamcredentials
+resource "google_project_service" "iamcredentials" {
+  service                    = "iamcredentials.googleapis.com"
+  disable_dependent_services = true
+}
+
+#GKE connect
+resource "google_project_service" "gkeconnect" {
+  service                    = "gkeconnect.googleapis.com"
+  disable_dependent_services = true
+}
+
+#monitoring
+resource "google_project_service" "monitoring" {
+  service                    = "monitoring.googleapis.com"
+  disable_dependent_services = true
+}
+
+#logging
+resource "google_project_service" "logging" {
+  service                    = "logging.googleapis.com"
+  disable_dependent_services = true
+}
+
+#iam
+resource "google_project_service" "iam" {
+  service                    = "iam.googleapis.com"
+  disable_dependent_services = true
+}

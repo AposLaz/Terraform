@@ -6,3 +6,6 @@ credentials/
 terraform.tfstate
 terraform.tfstate.backup
 plan.txt
+
+asm_output/
+asmcli

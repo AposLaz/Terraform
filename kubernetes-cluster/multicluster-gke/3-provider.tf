@@ -14,6 +14,11 @@ terraform {
       version = "4.65.2"
     }
 
+    google-beta = {
+      source  = "hashicorp/google-beta"
+      version = "3.67.0"
+    }
+
     kubernetes = {
       source  = "hashicorp/kubernetes"
       version = "2.20.0"
@@ -36,6 +41,11 @@ provider "google" {
   project     = var.project-id
   region      = var.region
   credentials = file("${var.credentials_gcp}/secrets.json")
+}
+
+provider "google-beta" {
+  credentials = file("${var.credentials_gcp}/secrets.json")
+  project     = var.project-id
 }
 
 provider "kubernetes" {
