@@ -3,7 +3,7 @@ resource "google_container_cluster" "primary" {
   name                     = "cluster-${count.index}"
   location                 = var.cluster-zones[count.index]
   remove_default_node_pool = true
-  initial_node_count       = 1
+  initial_node_count       = 0
   /**
     Define how applications in this cluster communicate with each other and with 
     the Kubernetes control plane, and how clients can reach them.
@@ -56,6 +56,15 @@ resource "google_container_cluster" "primary" {
   #   enable_private_endpoint = false
   #   master_ipv4_cidr_block  = "172.16.0.0/28"
   # }
-
-  depends_on = [google_project_service.compute, google_project_service.container]
+  depends_on = [
+    google_project_service.compute,
+    google_project_service.container,
+    google_project_service.cloud-resource-manager,
+    google_project_service.gkeconnect,
+    google_project_service.iam,
+    google_project_service.gke-hub,
+    google_project_service.iamcredentials,
+    google_project_service.monitoring,
+    google_project_service.logging
+  ]
 }

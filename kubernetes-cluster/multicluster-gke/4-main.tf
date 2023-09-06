@@ -104,6 +104,12 @@ resource "google_project_service" "logging" {
   disable_dependent_services = true
 }
 
+#profiling
+resource "google_project_service" "profiler" {
+  service                    = "cloudprofiler.googleapis.com"
+  disable_dependent_services = true
+}
+
 #iam
 resource "google_project_service" "iam" {
   service                    = "iam.googleapis.com"
