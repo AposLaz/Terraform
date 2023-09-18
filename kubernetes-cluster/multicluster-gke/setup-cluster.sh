@@ -88,7 +88,6 @@ do
     kubectl label namespace fleet istio.io/rev=$REVISION --overwrite
     kubectl apply -n $GATEWAY_NS -f ./asm_output/samples/gateways/istio-ingressgateway
     kubectl label namespace fleet istio-injection=enabled istio.io/rev=$REVISION --overwrite
-    echo "************** SET UP BOOK INFO ***************"
     # kubectl apply -f ./asm_output/istio-1.16.7-asm.0/samples/bookinfo/platform/kube/bookinfo.yaml --namespace=fleet
     # kubectl apply -f ./asm_output/istio-1.16.7-asm.0/samples/bookinfo/networking/bookinfo-gateway.yaml --namespace=fleet
 done
@@ -103,7 +102,6 @@ ALL_CLUSTER_NETTAGS=$(gcloud compute instances list --project $PROJECT_ID --form
 ALL_CLUSTER_NETTAGS=$(join_by , $(echo "${ALL_CLUSTER_NETTAGS}"))
 
 sleep 1
-
 
 echo "************** SERVICE DISCOVERY ***************"
 #Create firewall rules for cross-region communication

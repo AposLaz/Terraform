@@ -1,11 +1,6 @@
-# kubectl exec --context="${CTX_1}" -n fleet -c sleep \
-#     "$(kubectl get pod --context="${CTX_1}" -n fleet -l \
-#     app=sleep -o jsonpath='{.items[0].metadata.name}')" \
-#     -- /bin/sh -c 'for i in $(seq 1 20); do curl -sS helloworld.fleet:5000/hello; done'
-
+# export PROJECT_NUMBER=$(gcloud projects describe ${PROJECT_ID} \
+#     --format="value(projectNumber)")
 export PROJECT_ID=$(gcloud config get-value project)
-export PROJECT_NUMBER=$(gcloud projects describe ${PROJECT_ID} \
-    --format="value(projectNumber)")
 
 export CLUSTER_NAME_1="cluster-0"
 export CLUSTER_ZONE_1="europe-west3-a"
@@ -16,51 +11,93 @@ export CLUSTER_ZONE_2="europe-west8-a"
 export CTX_2="gke_${PROJECT_ID}_${CLUSTER_ZONE_2}_${CLUSTER_NAME_2}"
 
 export ASM_VERSION="$(./asmcli --version)"
-export HELLO_WORLD_DIR=./asm_output/istio-${ASM_VERSION%+*}
 
-echo ""
-export ASM_VERSION="$(./asmcli --version)"
-export HELLO_WORLD_DIR=./asm_output/istio-${ASM_VERSION%+*}
+export REVISION=kubectl get deploy -n istio-system -l app=istiod -o jsonpath={.items[*].metadata.labels.'istio\.io\/rev'}'{"\n"}'
+# export HELLO_WORLD_DIR=./asm_output/istio-${ASM_VERSION%+*}
 
-kubectl create --context=${CTX_1} \
-  -f ${HELLO_WORLD_DIR}/samples/helloworld/helloworld.yaml \
-  -l version=v1 -n fleet
+# echo ""
+# export ASM_VERSION="$(./asmcli --version)"
+# export HELLO_WORLD_DIR=./asm_output/istio-${ASM_VERSION%+*}
 
-kubectl create --context=${CTX_2} \
-  -f ${HELLO_WORLD_DIR}/samples/helloworld/helloworld.yaml \
-  -l version=v2 -n fleet
+################################################################################################ ONLINE BOUTIQUE
 
 
 for CTX in ${CTX_1} ${CTX_2}
 do
+    echo "*********** Install Namespaces for ${CTX} *****************"
     kubectl apply --context=${CTX} \
-        -f ${HELLO_WORLD_DIR}/samples/sleep/sleep.yaml -n fleet
+        -f ./kubernetes-cluster/multicluster-gke/apps/online-boutique/kubernetes-manifests/namespaces
 done
 
-kubectl create --context=${CTX_1} \
-    -f ${HELLO_WORLD_DIR}/samples/helloworld/helloworld.yaml \
-    -l service=helloworld -n fleet
 
-kubectl create --context=${CTX_2} \
-    -f ${HELLO_WORLD_DIR}/samples/helloworld/helloworld.yaml \
-    -l service=helloworld -n fleet
+echo "*********** Install Deployments for ${CTX} *****************"
+kubectl apply --context=${CTX_1} \
+        -f ./kubernetes-cluster/multicluster-gke/apps/online-boutique/kubernetes-manifests/deployments/cluster-0
+
+kubectl apply --context=${CTX_2} \
+        -f ./kubernetes-cluster/multicluster-gke/apps/online-boutique/kubernetes-manifests/deployments/cluster-1
 
 
-kubectl create --context=${CTX_1} \
-    -f ${HELLO_WORLD_DIR}/samples/helloworld/helloworld.yaml \
-    -l service=helloworld -n fleet
+for CTX in ${CTX_1} ${CTX_2}
+do
+    echo "*********** Install Services for ${CTX} *****************"
+    kubectl apply --context=${CTX} \
+        -f ./kubernetes-cluster/multicluster-gke/apps/online-boutique/kubernetes-manifests/services
+done
 
-kubectl create --context=${CTX_2} \
-    -f ${HELLO_WORLD_DIR}/samples/helloworld/helloworld.yaml \
-    -l service=helloworld -n fleet
+for CTX in ${CTX_1} ${CTX_2}
+do
+    echo "*********** Install ISTIO EGRESS for ${CTX} *****************"
+    kubectl apply --context=${CTX} \
+        -f ./kubernetes-cluster/multicluster-gke/apps/online-boutique/istio-manifests/allow-egress-googleapis.yaml
+done
 
-kubectl exec --context="${CTX_1}" -n fleet -c sleep \
-    "$(kubectl get pod --context="${CTX_1}" -n fleet -l \
-    app=sleep -o jsonpath='{.items[0].metadata.name}')" \
-    -- /bin/sh -c 'for i in $(seq 1 20); do curl -sS helloworld.fleet:5000/hello; done'
+for CTX in ${CTX_1} ${CTX_2}
+do
+  echo "*********** Add istio injection for pods for ${CTX} ***********"
+  for ns in ad cart checkout currency email frontend loadgenerator \
+    payment productcatalog recommendation shipping; do
+      kubectl label namespace $ns istio-injection=enabled istio.io/rev=${REVISION} --overwrite
+  done
+done;
 
-kubectl exec --context="${CTX_2}" -n fleet -c sleep \
-    "$(kubectl get pod --context="${CTX_2}" -n fleet -l \
-    app=sleep -o jsonpath='{.items[0].metadata.name}')" \
-    -- /bin/sh -c 'for i in $(seq 1 20); do curl -sS helloworld.fleet:5000/hello; done'
+for CTX in ${CTX_1} ${CTX_2}
+do
+  echo "*********** Rollout pods for ${CTX} ***********"
+  for ns in ad cart checkout currency email frontend loadgenerator \
+    payment productcatalog recommendation shipping; do
+      kubectl rollout restart deployment -n ${ns}
+  done;
+done;
 
+kubectl apply --context=${CTX_1} -f ./kubernetes-cluster/multicluster-gke/apps/online-boutique/istio-manifests/frontend-gateway.yaml
+
+sleep 2
+
+echo "******************* ADD VERSIONS FOR EVERY CLUSTER *******************"
+
+sleep 2
+WORDTOREMOVE="service"
+NS=${deploy//$WORDTOREMOVE/}
+
+# for deploy in adservice cartservice checkoutservice currencyservice emailservice frontend loadgenerator \
+#     paymentservice productcatalogservice recommendationservice shippingservice; do
+#       NS=${deploy/%"$WORDTOREMOVE"}
+#       kubectl patch --context=${CTX_1} \
+#         deployments/${deploy} -p '{"spec":{"template":{"metadata":{"labels":{"version":"v1"}}}}}' -n ${NS}
+#       kubectl patch --context=${CTX_2} \
+#         deployments/${deploy} -p '{"spec":{"template":{"metadata":{"labels":{"version":"v2"}}}}}' -n ${NS}
+#       sleep 2
+# done;
+
+for deploy in adservice cartservice checkoutservice currencyservice emailservice frontend loadgenerator \
+    paymentservice productcatalogservice recommendationservice shippingservice; do
+      NS=${deploy/%"$WORDTOREMOVE"}
+      kubectl delete --context=${CTX_1} \
+        -f ./kubernetes-cluster/multicluster-gke/apps/online-boutique/kubernetes-manifests/virtual-svc/ -n $NS
+      kubectl apply --context=${CTX_1} \
+        -f ./kubernetes-cluster/multicluster-gke/apps/online-boutique/kubernetes-manifests/virtual-svc/${deploy}.yaml -n $NS
+done;
+
+# kubectl patch --context=${CTX_2} \
+#         -f ./kubernetes-cluster/multicluster-gke/apps/online-boutique/kubernetes-manifests/deployments -p '{"spec":{"template":{"metadata":{"labels":{"version":"v2"}}}}}'
