@@ -77,7 +77,8 @@ do
         --enable_all \
         # --option legacy-default-ingressgateway \
         --ca mesh_ca \
-        --enable_gcp_components 
+        --enable_gcp_components \
+        --option prometheus-and-stackdriver
 
     echo "************** CREATE ISTIO GATEWAY ***************"
     kubectl create namespace $GATEWAY_NS

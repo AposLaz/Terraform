@@ -37,7 +37,7 @@ kubectl apply --context=${CTX_1} \
 kubectl apply --context=${CTX_2} \
         -f ./kubernetes-cluster/multicluster-gke/apps/online-boutique/kubernetes-manifests/deployments/cluster-1
 
-
+sleep 3
 for CTX in ${CTX_1} ${CTX_2}
 do
     echo "*********** Install Services for ${CTX} *****************"
@@ -57,7 +57,7 @@ do
   echo "*********** Add istio injection for pods for ${CTX} ***********"
   for ns in ad cart checkout currency email frontend loadgenerator \
     payment productcatalog recommendation shipping; do
-      kubectl label namespace $ns istio-injection=enabled istio.io/rev=${REVISION} --overwrite
+      kubectl --context=${CTX} label namespace $ns istio-injection=enabled istio.io/rev=${REVISION} --overwrite
   done
 done;
 
@@ -80,24 +80,35 @@ sleep 2
 WORDTOREMOVE="service"
 NS=${deploy//$WORDTOREMOVE/}
 
-# for deploy in adservice cartservice checkoutservice currencyservice emailservice frontend loadgenerator \
-#     paymentservice productcatalogservice recommendationservice shippingservice; do
-#       NS=${deploy/%"$WORDTOREMOVE"}
-#       kubectl patch --context=${CTX_1} \
-#         deployments/${deploy} -p '{"spec":{"template":{"metadata":{"labels":{"version":"v1"}}}}}' -n ${NS}
-#       kubectl patch --context=${CTX_2} \
-#         deployments/${deploy} -p '{"spec":{"template":{"metadata":{"labels":{"version":"v2"}}}}}' -n ${NS}
-#       sleep 2
-# done;
-
 for deploy in adservice cartservice checkoutservice currencyservice emailservice frontend loadgenerator \
     paymentservice productcatalogservice recommendationservice shippingservice; do
       NS=${deploy/%"$WORDTOREMOVE"}
       kubectl delete --context=${CTX_1} \
-        -f ./kubernetes-cluster/multicluster-gke/apps/online-boutique/kubernetes-manifests/virtual-svc/ -n $NS
+        -f ./kubernetes-cluster/multicluster-gke/apps/online-boutique/kubernetes-manifests/virtual-svc/${deploy}.yaml -n $NS
       kubectl apply --context=${CTX_1} \
         -f ./kubernetes-cluster/multicluster-gke/apps/online-boutique/kubernetes-manifests/virtual-svc/${deploy}.yaml -n $NS
 done;
 
-# kubectl patch --context=${CTX_2} \
-#         -f ./kubernetes-cluster/multicluster-gke/apps/online-boutique/kubernetes-manifests/deployments -p '{"spec":{"template":{"metadata":{"labels":{"version":"v2"}}}}}'
+echo "****************************** SET UP PROMETHEUS *********************************"
+echo ${ASM_VERSION%+*}
+for CTX in ${CTX_1} ${CTX_2}
+do
+  # kubectl apply --context=${CTX} -f ./asm_output/istio-${ASM_VERSION%+*}/samples/addons/prometheus.yaml
+  # kubectl apply --context=${CTX} -f ./asm_output/istio-${ASM_VERSION%+*}/samples/addons/extras/prometheus-operator.yaml
+  kubectl config use-context ${CTX}
+  sleep 5
+  helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+  helm repo update
+  helm install -f ./kubernetes-cluster/multicluster-gke/helm-charts/prometheus-values.yaml prometheus prometheus-community/kube-prometheus-stack --namespace istio-system
+  sleep 10
+  kubectl create namespace ingress-nginx #create namespace for ingress-nginx
+  sleep 10
+  helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+  helm repo update
+  helm install -f ./kubernetes-cluster/multicluster-gke/helm-charts/ingress-values.yaml ingress-nginx ingress-nginx/ingress-nginx --namespace ingress-nginx
+  sleep 10
+  kubectl apply -f ./kubernetes-cluster/multicluster-gke/configuration/istio/istio-scrape.yaml
+  sleep 10
+  kubectl apply -f ./kubernetes-cluster/multicluster-gke/configuration/prometheus/ingress-prometheus.yaml
+done;
+

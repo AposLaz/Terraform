@@ -62,7 +62,7 @@ variable "vpc-name" {
 variable "helm-charts" {
   type        = string
   description = "path for helm charts"
-  default     = "/home/apostolos/Desktop/Terraform/kubernetes-cluster/iliadis-gke/helm-charts"
+  default     = "/home/apostolos/Desktop/Terraform/kubernetes-cluster/multicluster-gke/helm-charts"
 }
 
 #Namespaces
@@ -87,7 +87,7 @@ variable "application_path" {
 variable "configuration_path" {
   type        = string
   description = "Path from application folders"
-  default     = "/home/apostolos/Desktop/Terraform/kubernetes-cluster/"
+  default     = "/home/apostolos/Desktop/Terraform/kubernetes-cluster/multicluster-gke/"
 }
 
 variable "google_eshop_ns" {
